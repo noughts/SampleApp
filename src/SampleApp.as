@@ -1,25 +1,33 @@
 package {
-	import flash.display.Loader;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
+	import flash.display.*;
+	import flash.geom.*;
+	import flash.events.*;
 	import flash.utils.setTimeout;
 	
 	[SWF(width="640", height="920", frameRate="60", backgroundColor="#FFFFFF")] 
 	public class SampleApp extends Sprite {
 				
-		var design:Design = new Design()
-		var capture:CaptureDevice
-		var bd:BitmapData;
-		var bmp:Bitmap;
-		var currentDeviceName:String;
+		private var design:Design = new Design()
+		private var capture:CaptureDevice
+		private var bd:BitmapData;
+		private var bmp:Bitmap;
+		private var currentDeviceName:String;
 
 		public function SampleApp(){
 			addChild( design )
+			design.startCamera_btn.addEventListener( MouseEvent.CLICK, function(e):void{ startCapture() } );
+			design.stopCamera_btn.addEventListener( MouseEvent.CLICK, function(e):void{ stopCapture() } );
+			design.shutter_btn.addEventListener( MouseEvent.CLICK, function(e):void{ shutter() } );
+			design.flashOn_btn.addEventListener( MouseEvent.CLICK, function(e):void{ setFlashMode( CaptureDevice.FLASH_MODE_ON ) } );
+			design.flashOff_btn.addEventListener( MouseEvent.CLICK, function(e):void{ setFlashMode( CaptureDevice.FLASH_MODE_OFF ) } );
+			design.flashAuto_btn.addEventListener( MouseEvent.CLICK, function(e):void{ setFlashMode( CaptureDevice.FLASH_MODE_AUTO ) } );
+			design.changeCamera_btn.addEventListener( MouseEvent.CLICK, function(e):void{ toggleDevice() } );
+			design.focusPoint_mc.visible = false;
 		}
 
 
 		// カメラを取得しキャプチャを開始
-		public function startCapture(){
+		public function startCapture():void{
 			var names:Array = CaptureDevice.names;
 			if( names.length==0 ){
 				trace( "カメラが見つかりません" )
@@ -35,22 +43,26 @@ package {
 			}
 			currentDeviceName = name;
 			addEventListener( Event.ENTER_FRAME, renderFrame )
-			capture.start()
+			capture.addEventListener( CaptureDevice.EVENT_FOCUS_COMPLETE, onFocusComplete );
+			capture.startCapturing()
 		}
 
 		// ANE から新しいフレーム画像を取得し、画面に表示
-		private function renderFrame(){
+		private function renderFrame():void{
 			var isNewFrame:Boolean;
 			isNewFrame = capture.requestFrame();
 			if( isNewFrame ){
 				if( !bd ){
 					bd = new BitmapData( capture.bmp.width, capture.bmp.height )
 					bmp = new Bitmap( bd )
-					addChild( bmp )
+					bmp.addEventListener( MouseEvent.CLICK, onPreviewClick );
+					design.previewContainer_mc.addChild( bmp )
 				}
-				bd.copyPixels( capture.bmp, capture.bmp.rect, _origin);
+				bd.copyPixels( capture.bmp, capture.bmp.rect, new Point(0,0));
 			}
 		}
+
+
 
 		// フォーカスと露出を合わせて撮影、フルサイズの画像を端末のカメラロールに保存し、withSound が true ならシャッター音を鳴らす
 		// シャッター音は消せない可能性あり。要相談
@@ -59,18 +71,31 @@ package {
 		}
 
 		// キャプチャを終了
-		private function stopCapture(){
-			capture.stop()
+		private function stopCapture():void{
+			capture.stopCapturing()
 			removeEventListener( Event.ENTER_FRAME, renderFrame )
+			capture.removeEventListener( CaptureDevice.EVENT_FOCUS_COMPLETE, onFocusComplete );
+		}
+
+
+		private function onPreviewClick(e:MouseEvent):void{
+			var bmp:Bitmap = e.currentTarget as Bitmap;
+			var px:Number = e.localX / bmp.width
+			var py:Number = e.localY / bmp.height;
+			focusAndExposureAtPoint( px, py )
+		}
+
+		private function onFocusComplete(e:Event):void{
+			design.focusPoint_mc.visible = false;
 		}
 
 		// フラッシュの状態を取得
-		private function getFlashMode():String{
+		private function getFlashMode():uint{
 			return capture.getFlashMode()
 		}
 		// フラッシュの状態を設定
-		// "on" or "off" or "auto"
-		private function setFlashMode( mode:String ):void{
+		// CaptureDevice.FLASH_MODE_OFF など
+		private function setFlashMode( mode:uint ):void{
 			capture.setFlashMode( mode )
 		}
 
@@ -81,8 +106,8 @@ package {
 		}
 
 		// カメラをトグル
-		private function toggleCamera(){
-			capture.toggleCamera()
+		private function toggleDevice():void{
+			capture.toggleDevice()
 		}
 		
 		

@@ -1,8 +1,13 @@
 package {
-	import flash.display.*;
-	import flash.geom.*;
-	import flash.events.*;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	import flash.utils.setTimeout;
+	
+	import jp.dividual.capture.CaptureDevice;
 	
 	[SWF(width="640", height="920", frameRate="60", backgroundColor="#FFFFFF")] 
 	public class SampleApp extends Sprite {
@@ -25,7 +30,6 @@ package {
 			design.focusPoint_mc.visible = false;
 		}
 
-
 		// カメラを取得しキャプチャを開始
 		public function startCapture():void{
 			var names:Array = CaptureDevice.names;
@@ -36,7 +40,7 @@ package {
 			var name:String = names[0]
 			var _width:uint = 640;
 			var _height:uint = 480
-			capture = CaptureDevice.getDevice( name, _width, _height )
+			capture = new CaptureDevice(0, _width, _height);
 			if( capture==null ){
 				trace( "カメラ"+ name +"を取得出来ませんでした。" )
 				return;
@@ -48,11 +52,11 @@ package {
 		}
 
 		// ANE から新しいフレーム画像を取得し、画面に表示
-		private function renderFrame():void{
+		private function renderFrame(evt:Event):void{
 			var isNewFrame:Boolean;
 			isNewFrame = capture.requestFrame();
-			if( isNewFrame ){
-				if( !bd ){
+			if (isNewFrame) {
+				if (!bd) {
 					bd = new BitmapData( capture.bmp.width, capture.bmp.height )
 					bmp = new Bitmap( bd )
 					bmp.addEventListener( MouseEvent.CLICK, onPreviewClick );
@@ -61,8 +65,6 @@ package {
 				bd.copyPixels( capture.bmp, capture.bmp.rect, new Point(0,0));
 			}
 		}
-
-
 
 		// フォーカスと露出を合わせて撮影、フルサイズの画像を端末のカメラロールに保存し、withSound が true ならシャッター音を鳴らす
 		// シャッター音は消せない可能性あり。要相談
@@ -109,8 +111,6 @@ package {
 		private function toggleDevice():void{
 			capture.toggleDevice()
 		}
-		
-		
 
 	}
 }

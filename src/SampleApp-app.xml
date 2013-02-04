@@ -281,5 +281,6 @@
     </iPhone>
     <extensions>
         <extensionID>ru.inspirit.capture</extensionID>
+    <extensionID>jp.dividual.capture</extensionID>
     </extensions>
 </application>

@@ -5,6 +5,7 @@ package {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 	
 	import jp.dividual.capture.CaptureDevice;
@@ -48,28 +49,39 @@ package {
 			currentDeviceName = name;
 			addEventListener( Event.ENTER_FRAME, renderFrame )
 			capture.addEventListener( CaptureDevice.EVENT_FOCUS_COMPLETE, onFocusComplete );
+			capture.addEventListener( CaptureDevice.EVENT_PREVIEW_READY, function(event:Event):void {
+				trace("EVENT: Preview ready");
+			});
+			capture.addEventListener( CaptureDevice.EVENT_IMAGE_SAVED, function(event:Event):void {
+				trace("EVENT: Image has been saved.");
+			});
 			capture.startCapturing()
 		}
 
 		// ANE から新しいフレーム画像を取得し、画面に表示
 		private function renderFrame(evt:Event):void{
 			var isNewFrame:Boolean;
-			isNewFrame = capture.requestFrame();
-			if (isNewFrame) {
-				if (!bd) {
-					bd = new BitmapData( capture.bmp.width, capture.bmp.height )
-					bmp = new Bitmap( bd )
-					bmp.addEventListener( MouseEvent.CLICK, onPreviewClick );
-					design.previewContainer_mc.addChild( bmp )
+			if (capture != null) {
+				isNewFrame = capture.requestFrame();
+				if (isNewFrame) {
+					if (!bd) {
+						bd = new BitmapData( capture.bmp.width, capture.bmp.height )
+						bmp = new Bitmap( bd )
+						bmp.x = bd.height + (640 - bd.height) / 2;
+						bmp.y = 130;
+						bmp.rotation = 90;
+						bmp.addEventListener( MouseEvent.CLICK, onPreviewClick );
+						design.previewContainer_mc.addChild(bmp);
+					}
+					bd.copyPixels( capture.bmp, capture.bmp.rect, new Point(0,0));
 				}
-				bd.copyPixels( capture.bmp, capture.bmp.rect, new Point(0,0));
 			}
 		}
 
 		// フォーカスと露出を合わせて撮影、フルサイズの画像を端末のカメラロールに保存し、withSound が true ならシャッター音を鳴らす
 		// シャッター音は消せない可能性あり。要相談
 		private function shutter( withSound:Boolean=true ):void{
-			capture.shutter( withSound )
+			capture.shutter("Blink", CaptureDevice.ROTATION_90, withSound);
 		}
 
 		// キャプチャを終了

@@ -27,6 +27,7 @@ package {
 			design.flashOn_btn.addEventListener( MouseEvent.CLICK, function(e):void{ setFlashMode( CaptureDevice.FLASH_MODE_ON ) } );
 			design.flashOff_btn.addEventListener( MouseEvent.CLICK, function(e):void{ setFlashMode( CaptureDevice.FLASH_MODE_OFF ) } );
 			design.flashAuto_btn.addEventListener( MouseEvent.CLICK, function(e):void{ setFlashMode( CaptureDevice.FLASH_MODE_AUTO ) } );
+			design.af_btn.addEventListener(MouseEvent.CLICK, function(e):void{ focusAndExposureAtPoint(320, 240); });
 			design.changeCamera_btn.addEventListener( MouseEvent.CLICK, function(e):void{ toggleDevice() } );
 			design.focusPoint_mc.visible = false;
 		}
@@ -91,7 +92,6 @@ package {
 			capture.removeEventListener( CaptureDevice.EVENT_FOCUS_COMPLETE, onFocusComplete );
 		}
 
-
 		private function onPreviewClick(e:MouseEvent):void{
 			var bmp:Bitmap = e.currentTarget as Bitmap;
 			var px:Number = e.localX / bmp.width
@@ -100,6 +100,7 @@ package {
 		}
 
 		private function onFocusComplete(e:Event):void{
+			trace("EVENT: Auto focus complete.");
 			design.focusPoint_mc.visible = false;
 		}
 

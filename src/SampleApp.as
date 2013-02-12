@@ -9,6 +9,7 @@ package {
 	import flash.utils.setTimeout;
 	
 	import jp.dividual.capture.CaptureDevice;
+	import jp.dividual.notification.NativeNotification;
 	
 	[SWF(width="640", height="920", frameRate="60", backgroundColor="#FFFFFF")] 
 	public class SampleApp extends Sprite {
@@ -18,6 +19,8 @@ package {
 		private var bd:BitmapData;
 		private var bmp:Bitmap;
 		private var currentDeviceName:String;
+
+		private var nativeNotification:NativeNotification;
 
 		public function SampleApp(){
 			addChild( design )
@@ -31,6 +34,8 @@ package {
 			design.changeCamera_btn.addEventListener( MouseEvent.CLICK, function(e):void{ toggleDevice() } );
 			design.registerPush_btn.addEventListener( MouseEvent.CLICK, function(e):void{ registerPush() } );
 			design.focusPoint_mc.visible = false;
+
+			nativeNotification = new NativeNotification();
 		}
 
 		// カメラを取得しキャプチャを開始
@@ -126,8 +131,8 @@ package {
 			capture.toggleDevice()
 		}
 
-		private function toggleDevice():void{
-			capture.registerPush()
+		private function registerPush():void{
+			nativeNotification.registerPush()
 		}
 	}
 }

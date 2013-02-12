@@ -29,6 +29,7 @@ package {
 			design.flashAuto_btn.addEventListener( MouseEvent.CLICK, function(e):void{ setFlashMode( CaptureDevice.FLASH_MODE_AUTO ) } );
 			design.af_btn.addEventListener(MouseEvent.CLICK, function(e):void{ focusAndExposureAtPoint(320, 240); });
 			design.changeCamera_btn.addEventListener( MouseEvent.CLICK, function(e):void{ toggleDevice() } );
+			design.registerPush_btn.addEventListener( MouseEvent.CLICK, function(e):void{ registerPush() } );
 			design.focusPoint_mc.visible = false;
 		}
 
@@ -125,6 +126,9 @@ package {
 			capture.toggleDevice()
 		}
 
+		private function toggleDevice():void{
+			capture.registerPush()
+		}
 	}
 }
 

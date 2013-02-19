@@ -248,7 +248,11 @@
 <android>
         <manifestAdditions><![CDATA[
 			<manifest android:installLocation="auto">
-				<application android:debuggable="true"/>
+			
+			 <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="15" />
+			
+				<application android:debuggable="true"
+				android:name="jp.dividual.capture.CaptureAndroidApplication"/>
 			    <!--See the Adobe AIR documentation for more information about setting Google Android permissions-->
 			    <!--android.permission.INTERNET 権限を削除すると、
 					デバイス上でアプリケーションをデバッグできなくなります-->

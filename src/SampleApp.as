@@ -55,12 +55,13 @@ package {
 			}
 			currentDeviceName = name;
 			addEventListener( Event.ENTER_FRAME, renderFrame )
-			capture.addEventListener( CaptureDevice.EVENT_FOCUS_COMPLETE, onFocusComplete );
-			capture.addEventListener( CaptureDevice.EVENT_PREVIEW_READY, function(event:Event):void {
+			capture.addEventListener( CaptureDeviceEvent.EVENT_FOCUS_COMPLETE, onFocusComplete );
+			capture.addEventListener( CaptureDeviceEvent.EVENT_PREVIEW_READY, function(event:CaptureDeviceEvent):void {
 				trace("EVENT: Preview ready");
 			});
-			capture.addEventListener( CaptureDevice.EVENT_IMAGE_SAVED, function(event:Event):void {
+			capture.addEventListener( CaptureDeviceEvent.EVENT_IMAGE_SAVED, function(e:CaptureDeviceEvent):void{
 				trace("EVENT: Image has been saved.");
+				capture.putExifLocation( e.data, 12.345, 23.456 );
 			});
 			capture.startCapturing()
 		}
@@ -95,7 +96,7 @@ package {
 		private function stopCapture():void{
 			capture.stopCapturing()
 			removeEventListener( Event.ENTER_FRAME, renderFrame )
-			capture.removeEventListener( CaptureDevice.EVENT_FOCUS_COMPLETE, onFocusComplete );
+			capture.removeEventListener( CaptureDeviceEvent.EVENT_FOCUS_COMPLETE, onFocusComplete );
 		}
 
 		private function onPreviewClick(e:MouseEvent):void{

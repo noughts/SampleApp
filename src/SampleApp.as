@@ -8,7 +8,7 @@ package {
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 	
-	import jp.dividual.capture.CaptureDevice;
+	import jp.dividual.capture.*;
 	
 	[SWF(width="640", height="920", frameRate="60", backgroundColor="#FFFFFF")] 
 	public class SampleApp extends Sprite {
@@ -55,7 +55,7 @@ package {
 			});
 			capture.addEventListener( CaptureDeviceEvent.EVENT_IMAGE_SAVED, function(e:CaptureDeviceEvent):void{
 				trace("EVENT: Image has been saved.");
-				capture.putExifLocation( e.data, 12.345, 23.456 );
+				//capture.putExifLocation( e.data, 12.345, 23.456 );
 			});
 			capture.startCapturing()
 		}

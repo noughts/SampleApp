@@ -279,7 +279,8 @@
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
-    <extensions>
-        <extensionID>ru.inspirit.capture</extensionID>
+    
+<extensions>
+        <extensionID>jp.dividual.capture</extensionID>
     </extensions>
 </application>

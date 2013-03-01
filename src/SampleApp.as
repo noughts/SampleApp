@@ -17,7 +17,6 @@ package {
 		private var capture:CaptureDevice
 		private var bd:BitmapData;
 		private var bmp:Bitmap;
-		private var currentDeviceName:String;
 
 		public function SampleApp(){
 			addChild( design )
@@ -34,30 +33,38 @@ package {
 
 		// カメラを取得しキャプチャを開始
 		public function startCapture():void{
-			var names:Array = CaptureDevice.names;
-			if( names.length==0 ){
-				trace( "カメラが見つかりません" )
-				return
-			}
-			var name:String = names[0]
-			var _width:uint = 640;
-			var _height:uint = 480
-			capture = new CaptureDevice(0, _width, _height);
 			if( capture==null ){
-				trace( "カメラ"+ name +"を取得出来ませんでした。" )
-				return;
+				var names:Array = CaptureDevice.names;
+				if( names.length==0 ){
+					trace( "カメラが見つかりません" )
+					return
+				}
+				var name:String = names[0]
+				var _width:uint = 852;
+				var _height:uint = 640
+				capture = new CaptureDevice(0, _width, _height);
+				if( capture==null ){
+					trace( "カメラ"+ name +"を取得出来ませんでした。" )
+					return;
+				}
+				capture.addEventListener( CaptureDeviceEvent.EVENT_PREVIEW_READY, _onPreviewReady );
+				capture.addEventListener( CaptureDeviceEvent.EVENT_IMAGE_SAVED, _onImageSaved );
+				capture.addEventListener( CaptureDeviceEvent.EVENT_FOCUS_COMPLETE, onFocusComplete );
 			}
-			currentDeviceName = name;
-			addEventListener( Event.ENTER_FRAME, renderFrame )
-			capture.addEventListener( CaptureDeviceEvent.EVENT_FOCUS_COMPLETE, onFocusComplete );
-			capture.addEventListener( CaptureDeviceEvent.EVENT_PREVIEW_READY, function(event:CaptureDeviceEvent):void {
-				trace("EVENT: Preview ready");
-			});
-			capture.addEventListener( CaptureDeviceEvent.EVENT_IMAGE_SAVED, function(e:CaptureDeviceEvent):void{
-				trace("EVENT: Image has been saved.");
-				//capture.putExifLocation( e.data, 12.345, 23.456 );
-			});
 			capture.startCapturing()
+			addEventListener( Event.ENTER_FRAME, renderFrame )
+		}
+
+		private function _onPreviewReady( e:CaptureDeviceEvent ):void{
+			trace("EVENT: Preview ready", capture.bmp.rect);
+			if( bmp ){
+				bmp.visible = true;
+			}
+		}
+
+		private function _onImageSaved( e:CaptureDeviceEvent ):void{
+			trace("EVENT: Image has been saved.");
+			//capture.putExifLocation( e.data, 12.345, 23.456 );
 		}
 
 		// ANE から新しいフレーム画像を取得し、画面に表示
@@ -69,11 +76,23 @@ package {
 					if (!bd) {
 						bd = new BitmapData( capture.bmp.width, capture.bmp.height )
 						bmp = new Bitmap( bd )
-						bmp.x = bd.height + (640 - bd.height) / 2;
-						bmp.y = 130;
 						bmp.rotation = 90;
-						bmp.addEventListener( MouseEvent.CLICK, onPreviewClick );
-						design.previewContainer_mc.addChild(bmp);
+						bmp.x = capture.bmp.rect.height;
+
+						// クリックしたポイントの座標をステージに配置したサイズと合わせるため、
+						// finderContainer_mc 内に finder_mc を作成し、そこに bmp を addChild したあとスケール
+						var finder_mc:Sprite = new Sprite()
+						finder_mc.addChild( bmp );
+						design.finderContainer_mc.addChild( finder_mc )
+
+						design.finderContainer_mc.mouseEnabled = true
+						design.finderContainer_mc.mouseChildren = false;
+						design.finderContainer_mc.addEventListener( MouseEvent.CLICK, onPreviewClick );
+
+						// 画面の幅に合わせてスケール
+						var _aspectRatio:Number = bd.width / bd.height;
+						finder_mc.width = 640;
+						finder_mc.height = 640 * _aspectRatio;
 					}
 					bd.copyPixels( capture.bmp, capture.bmp.rect, new Point(0,0));
 				}
@@ -88,17 +107,35 @@ package {
 
 		// キャプチャを終了
 		private function stopCapture():void{
+			if( capture==null ){
+				return;
+			}
 			capture.stopCapturing()
 			removeEventListener( Event.ENTER_FRAME, renderFrame )
-			capture.removeEventListener( CaptureDeviceEvent.EVENT_FOCUS_COMPLETE, onFocusComplete );
+			if( bmp ){
+				bmp.visible = false;
+			}
+
 		}
 
 		private function onPreviewClick(e:MouseEvent):void{
-			var bmp:Bitmap = e.currentTarget as Bitmap;
-			var px:Number = e.localX / bmp.width
-			var py:Number = e.localY / bmp.height;
-			focusAndExposureAtPoint( px, py )
+			//trace( "_onPreviewClick", e )
+			design.focusPoint_mc.visible = true
+			design.focusPoint_mc.x = e.localX
+			design.focusPoint_mc.y = e.localY
+
+			// ソースは横なので、回転させた座標を渡す
+			var tx:Number = e.localY
+			var ty:Number = 640 - e.localX
+			var px:Number = tx / design.finderContainer_mc.height
+			var py:Number = ty / design.finderContainer_mc.width
+			if( px > 1 ) px = 1;
+			if( py > 1 ) py = 1;
+			trace( "フォーカスします。", px, py )
+			capture.focusAndExposureAtPoint( px, py );
 		}
+
+
 
 		private function onFocusComplete(e:Event):void{
 			trace("EVENT: Auto focus complete.");

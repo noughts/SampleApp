@@ -34,9 +34,8 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/automation_agent.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
-      <libraryPathEntry kind="1" linkType="1" path="swc"/>
-      <libraryPathEntry kind="3" linkType="1" path="/Users/noughts/Dropbox/works/dividual/git/CameraExtension/bin/CaptureInterface.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="5" linkType="2" path="/Users/noughts/Dropbox/works/dividual/git/CameraExtension/capture.ane"/>
+      <libraryPathEntry kind="3" linkType="1" path="swc/view.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="5" linkType="2" path="capture.ane"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
@@ -50,18 +49,18 @@
   <buildCSSFiles/>
   <flashCatalyst validateFlashCatalystCompatibility="false"/>
   <buildTargets>
-    <buildTarget buildTargetName="device" iosSettingsVersion="2" isCurrent="true" platformId="com.adobe.flexide.multiplatform.ios.platform" provisioningFile="/Users/noughts/Dropbox/works/dividual/git/SampleApp/cert/dd_develop.mobileprovision" releasePackageType="">
-      <airSettings airCertificatePath="/Users/noughts/Dropbox/works/dividual/git/SampleApp/cert/dd_develop.p12" airTimestamp="true" anePathSet="true" version="1">
+    <buildTarget buildTargetName="device" iosSettingsVersion="2" isCurrent="true" platformId="com.adobe.flexide.multiplatform.ios.platform" provisioningFile="cert/dd_develop.mobileprovision" releasePackageType="ipa-ad-hoc">
+      <multiPlatformSettings enabled="true" hideAneLibSymbols="0" includePlatformLibs="false" platformID="com.adobe.flexide.multiplatform.ios.platform" reducedSizePackaging="false" version="1"/>
+      <airSettings airCertificatePath="cert/dd_develop.p12" airTimestamp="true" anePathSet="true" version="1">
         <airExcludes/>
         <anePaths>
-          <anePathEntry path="/Users/noughts/Dropbox/works/dividual/git/CameraExtension/capture.ane"/>
+          <anePathEntry path="capture.ane"/>
         </anePaths>
         <newLaunchParams/>
         <modifiedLaunchParams/>
         <newPackagingParams/>
         <modifiedPackagingParams/>
       </airSettings>
-      <multiPlatformSettings enabled="true" hideAneLibSymbols="0" includePlatformLibs="false" platformID="com.adobe.flexide.multiplatform.ios.platform" reducedSizePackaging="false" version="1"/>
       <actionScriptSettings version="1"/>
     </buildTarget>
     <buildTarget airDownloadURL="" androidSettingsVersion="2" buildTargetName="device" isCurrent="true" platformId="com.adobe.flexide.multiplatform.android.platform">
@@ -92,4 +91,3 @@
     </buildTarget>
   </buildTargets>
 </actionScriptProperties>
-

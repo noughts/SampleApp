@@ -29,6 +29,10 @@ package {
 			design.af_btn.addEventListener(MouseEvent.CLICK, function(e):void{ focusAndExposureAtPoint(320, 240); });
 			design.changeCamera_btn.addEventListener( MouseEvent.CLICK, function(e):void{ toggleDevice() } );
 			design.focusPoint_mc.visible = false;
+
+			design.flashOn_btn.visible = false;
+			design.flashOff_btn.visible = false;
+			design.flashAuto_btn.visible = false;
 		}
 
 		// カメラを取得しキャプチャを開始
@@ -55,11 +59,19 @@ package {
 			addEventListener( Event.ENTER_FRAME, renderFrame )
 		}
 
+
+
 		private function _onPreviewReady( e:CaptureDeviceEvent ):void{
 			trace("EVENT: Preview ready", capture.bmp.rect);
 			if( bmp ){
 				bmp.visible = true;
 			}
+
+			// LED フラッシュのサポート具合によって UI の表示を更新
+			var isFlashSupported:Boolean = capture.isFlashSupported;
+			design.flashOn_btn.visible = isFlashSupported;
+			design.flashOff_btn.visible = isFlashSupported;
+			design.flashAuto_btn.visible = isFlashSupported;
 		}
 
 		private function _onImageSaved( e:CaptureDeviceEvent ):void{

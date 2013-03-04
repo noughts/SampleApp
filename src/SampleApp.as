@@ -43,6 +43,9 @@ package {
 					trace( "カメラが見つかりません" )
 					return
 				}
+				if( names.length==1 ){
+					design.changeCamera_btn.visible = false;
+				}
 				var name:String = names[0]
 				var _width:uint = 852;
 				var _height:uint = 640

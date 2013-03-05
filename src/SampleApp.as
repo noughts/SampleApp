@@ -7,6 +7,8 @@ package {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
+
+	import fl.controls.*;
 	
 	import jp.dividual.capture.*;
 	
@@ -33,6 +35,13 @@ package {
 			design.flashOn_btn.visible = false;
 			design.flashOff_btn.visible = false;
 			design.flashAuto_btn.visible = false;
+
+			design.exposure_mc.visible = false;
+			design.exposure_mc.p2_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
+			design.exposure_mc.p1_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
+			design.exposure_mc.default_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
+			design.exposure_mc.m1_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
+			design.exposure_mc.m2_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
 		}
 
 		// カメラを取得しキャプチャを開始
@@ -69,13 +78,49 @@ package {
 			if( bmp ){
 				bmp.visible = true;
 			}
+			_updateUI()
+		}
 
+
+		private function _updateUI():void{
 			// LED フラッシュのサポート具合によって UI の表示を更新
 			var isFlashSupported:Boolean = capture.isFlashSupported;
 			design.flashOn_btn.visible = isFlashSupported;
 			design.flashOff_btn.visible = isFlashSupported;
 			design.flashAuto_btn.visible = isFlashSupported;
+
+			// 露出補正のサポート具合によって UI の表示を更新
+			var isExposureCompensationSupported:Boolean = capture.isExposureCompensationSupported;
+			design.exposure_mc.visible = isExposureCompensationSupported
+			if( isExposureCompensationSupported ){
+				// 露出設定設定を UI に反映
+				design.exposure_mc.p2_btn.selected = false;
+				design.exposure_mc.p1_btn.selected = false;
+				design.exposure_mc.default_btn.selected = false;
+				design.exposure_mc.m1_btn.selected = false;
+				design.exposure_mc.m2_btn.selected = false;
+				var level:int = capture.getExposureCompensation();
+				switch( level ){
+					case 2:
+						design.exposure_mc.p2_btn.selected = true;
+						break
+					case 1:
+						design.exposure_mc.p1_btn.selected = true;
+						break
+					case 0:
+						design.exposure_mc.default_btn.selected = true;
+						break
+					case -1:
+						design.exposure_mc.m1_btn.selected = true;
+						break
+					case -2:
+						design.exposure_mc.m2_btn.selected = true;
+						break
+				}
+			}
 		}
+
+
 
 		private function _onImageSaved( e:CaptureDeviceEvent ):void{
 			trace("EVENT: Image has been saved.");
@@ -156,6 +201,32 @@ package {
 			trace("EVENT: Auto focus complete.");
 			design.focusPoint_mc.visible = false;
 		}
+
+
+		// 露出補正
+		private function _onExposureClick( e:MouseEvent ):void{
+			var btn:Button = e.currentTarget as Button;
+			var level:int = 0;
+			switch( btn ){
+				case design.exposure_mc.p2_btn:
+					level = 2;
+					break;
+				case design.exposure_mc.p1_btn:
+					level = 1;
+					break;
+				case design.exposure_mc.default_btn:
+					level = 0;
+					break;
+				case design.exposure_mc.m1_btn:
+					level = -1;
+					break;
+				case design.exposure_mc.m2_btn:
+					level = -2;
+					break;
+			}
+			capture.setExposureCompensation( level )
+		}
+
 
 		// フラッシュの状態を取得
 		private function getFlashMode():uint{

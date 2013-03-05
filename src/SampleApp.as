@@ -22,6 +22,9 @@ package {
 
 		public function SampleApp(){
 			addChild( design )
+
+			design.diaphragmAnime_mc.stop();
+
 			design.startCamera_btn.addEventListener( MouseEvent.CLICK, function(e):void{ startCapture() } );
 			design.stopCamera_btn.addEventListener( MouseEvent.CLICK, function(e):void{ stopCapture() } );
 			design.shutter_btn.addEventListener( MouseEvent.CLICK, function(e):void{ shutter() } );
@@ -75,6 +78,7 @@ package {
 
 		private function _onPreviewReady( e:CaptureDeviceEvent ):void{
 			trace("EVENT: Preview ready", capture.bmp.rect);
+			design.diaphragmAnime_mc.play()
 			if( bmp ){
 				bmp.visible = true;
 			}
@@ -175,6 +179,7 @@ package {
 			if( bmp ){
 				bmp.visible = false;
 			}
+			design.diaphragmAnime_mc.gotoAndPlay( "close" )
 
 		}
 

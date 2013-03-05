@@ -105,9 +105,12 @@ package {
 			if( bmp ){
 				bmp.visible = false;
 			}
-			design.diaphragmAnime_mc.gotoAndPlay( "close" )
+			
 			if( onAppExit==false ){
 				cameraLaunched = false;
+				design.diaphragmAnime_mc.gotoAndPlay( "close" )
+			} else {
+				design.diaphragmAnime_mc.gotoAndStop( "open" )
 			}
 		}
 

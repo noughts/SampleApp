@@ -1,11 +1,8 @@
 package {
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.geom.*;
+	import flash.desktop.*;
 	import flash.utils.setTimeout;
 
 	import fl.controls.*;
@@ -19,6 +16,7 @@ package {
 		private var capture:CaptureDevice
 		private var bd:BitmapData;
 		private var bmp:Bitmap;
+		private var cameraLaunched:Boolean = false;
 
 		private var nativeNotification:NativeNotification;
 
@@ -50,6 +48,28 @@ package {
 			design.exposure_mc.m1_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
 			design.exposure_mc.m2_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
 
+<<<<<<< HEAD
+=======
+			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE, _onInvoke );
+			NativeApplication.nativeApplication.addEventListener( Event.DEACTIVATE, _onDeactivateHandler );
+		}
+
+		// 起動時
+		private function _onInvoke( e:InvokeEvent ):void{
+			trace( e );
+			trace( "cameraLaunched", cameraLaunched )
+			if( cameraLaunched ){
+				startCapture();
+			}
+		}
+
+		// 終了時
+		private function _onDeactivateHandler( e:Event ):void{
+			trace( e );
+			if( cameraLaunched ){
+				stopCapture( true );
+			}
+>>>>>>> develop
 		}
 
 		// カメラを取得しキャプチャを開始
@@ -77,17 +97,35 @@ package {
 			}
 			capture.startCapturing()
 			addEventListener( Event.ENTER_FRAME, renderFrame )
+			cameraLaunched = true;
 		}
 
+		// キャプチャを終了
+		// onAppExit はアプリ終了時のカメラ停止時に true で呼ばれる。
+		// その場合は、次回起動時にまたカメラを起動できるようにするため、cameraLaunched を false にしない。
+		private function stopCapture( onAppExit:Boolean=false ):void{
+			if( capture==null ){
+				return;
+			}
+			capture.stopCapturing()
+			removeEventListener( Event.ENTER_FRAME, renderFrame )
+			if( bmp ){
+				bmp.visible = false;
+			}
+			design.diaphragmAnime_mc.gotoAndPlay( "close" )
+			if( onAppExit==false ){
+				cameraLaunched = false;
+			}
+		}
 
 
 		private function _onPreviewReady( e:CaptureDeviceEvent ):void{
 			trace("EVENT: Preview ready", capture.bmp.rect);
-			design.diaphragmAnime_mc.play()
+			design.diaphragmAnime_mc.gotoAndPlay( "open" )
 			if( bmp ){
 				bmp.visible = true;
 			}
-			_updateUI()
+			//_updateUI()
 		}
 
 
@@ -174,19 +212,6 @@ package {
 			capture.shutter("Blink", CaptureDevice.ROTATION_90, withSound);
 		}
 
-		// キャプチャを終了
-		private function stopCapture():void{
-			if( capture==null ){
-				return;
-			}
-			capture.stopCapturing()
-			removeEventListener( Event.ENTER_FRAME, renderFrame )
-			if( bmp ){
-				bmp.visible = false;
-			}
-			design.diaphragmAnime_mc.gotoAndPlay( "close" )
-
-		}
 
 		private function onPreviewClick(e:MouseEvent):void{
 			//trace( "_onPreviewClick", e )

@@ -18,6 +18,7 @@ package {
 		private var bd:BitmapData;
 		private var bmp:Bitmap;
 		private var cameraLaunched:Boolean = false;
+		private var orientationDetector:DeviceOrientationDetector
 
 		public function SampleApp(){
 			addChild( design )
@@ -48,8 +49,10 @@ package {
 			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE, _onInvoke );
 			NativeApplication.nativeApplication.addEventListener( Event.DEACTIVATE, _onDeactivateHandler );
 
-			var orientationDetector:DeviceOrientationDetector = new DeviceOrientationDetector();
+			//stage.addEventListener( Event.ENTER_FRAME, function(){ trace( stage.deviceOrientation ) });
 
+			orientationDetector = new DeviceOrientationDetector();
+			orientationDetector.addEventListener( StageOrientationEvent.ORIENTATION_CHANGE, _onDeviceOrientationChange );
 		}
 
 		// 起動時
@@ -67,6 +70,11 @@ package {
 			if( cameraLaunched ){
 				stopCapture( true );
 			}
+		}
+
+		// 本体の向きが変わった時
+		private function _onDeviceOrientationChange( e:StageOrientationEvent ):void{
+			trace( "_onDeviceOrientationChange", e.afterOrientation )
 		}
 
 
@@ -210,7 +218,23 @@ package {
 		// フォーカスと露出を合わせて撮影、フルサイズの画像を端末のカメラロールに保存し、withSound が true ならシャッター音を鳴らす
 		// シャッター音は消せない可能性あり。要相談
 		private function shutter( withSound:Boolean=true ):void{
-			capture.shutter("Blink", CaptureDevice.ROTATION_90, withSound);
+			var rot:int;
+			switch( orientationDetector.deviceOrientation ){
+				case StageOrientation.DEFAULT:
+					rot = CaptureDevice.ROTATION_0;
+					break;
+				case StageOrientation.ROTATED_RIGHT:
+					rot = CaptureDevice.ROTATION_90;
+					break;
+				case StageOrientation.UPSIDE_DOWN:
+					rot = CaptureDevice.ROTATION_180;
+					break;
+				case StageOrientation.ROTATED_LEFT:
+					rot = CaptureDevice.ROTATION_270;
+					break;
+			}
+			trace( "shutter", orientationDetector.deviceOrientation, rot )
+			capture.shutter("Blink", rot, withSound);
 		}
 
 

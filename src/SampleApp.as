@@ -126,7 +126,7 @@ package {
 			if( bmp ){
 				bmp.visible = true;
 			}
-			//_updateUI()
+			_updateUI()
 		}
 
 

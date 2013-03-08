@@ -14,7 +14,7 @@ package{
 
 	public class DeviceOrientationDetector extends EventDispatcher{
 
-		public var currentOrientation:StageOrientation;
+		public var currentOrientation:String;
 
 		public function DeviceOrientationDetector(){
 			currentOrientation = StageOrientation.DEFAULT;
@@ -23,15 +23,15 @@ package{
 		}
 
 		private function accUpdateHandler( e:AccelerometerEvent ):void{
-			var newOrientation:StageOrientation = _getOrientation( e )
+			var newOrientation:String = _getOrientation( e )
 			if( currentOrientation != newOrientation ){
 				var soe:StageOrientationEvent = new StageOrientationEvent( StageOrientationEvent.ORIENTATION_CHANGE );
 				dispatchEvent( soe );
 			}
 			currentOrientation = newOrientation;
 		}
-		private function _getOrientation( e:AccelerometerEvent ):StageOrientation{
-			var out:StageOrientation = StageOrientation.DEFAULT;
+		private function _getOrientation( e:AccelerometerEvent ):String{
+			var out:String = StageOrientation.DEFAULT;
 			return out;
 		}
 

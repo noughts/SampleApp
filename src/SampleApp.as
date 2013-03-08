@@ -80,6 +80,9 @@ package {
 
 		// カメラを取得しキャプチャを開始
 		public function startCapture():void{
+			trace( ">>>>", CaptureDevice.names )
+			trace( ">>>>", CaptureDevice.names )
+			trace( ">>>>", CaptureDevice.names )
 			if( capture==null ){
 				var names:Array = CaptureDevice.names;
 				if( names.length==0 ){

@@ -3,6 +3,7 @@ package {
 	import flash.events.*;
 	import flash.geom.*;
 	import flash.desktop.*;
+	import flash.sensors.*;
 	import flash.utils.setTimeout;
 
 	import fl.controls.*;
@@ -46,6 +47,9 @@ package {
 
 			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE, _onInvoke );
 			NativeApplication.nativeApplication.addEventListener( Event.DEACTIVATE, _onDeactivateHandler );
+
+			var orientationDetector:DeviceOrientationDetector = new DeviceOrientationDetector();
+
 		}
 
 		// 起動時
@@ -64,6 +68,7 @@ package {
 				stopCapture( true );
 			}
 		}
+
 
 		// カメラを取得しキャプチャを開始
 		public function startCapture():void{

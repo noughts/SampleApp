@@ -8,7 +8,7 @@ package {
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 	
-	import jp.dividual.capture.CaptureDevice;
+	import jp.dividual.capture.*;
 	import jp.dividual.notification.NativeNotification;
 	
 	[SWF(width="640", height="920", frameRate="60", backgroundColor="#FFFFFF")] 

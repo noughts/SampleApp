@@ -15,7 +15,7 @@
 
 	<!-- A universally unique application identifier. Must be unique across all AIR applications.
 	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-	<id>jp.dividual.SampleApp</id>
+	<id>jp.dividual.SampleApp.debug</id>
 
 	<!-- Used as the filename for the application. Required. -->
 	<filename>SampleApp</filename>
@@ -251,6 +251,18 @@
 			
 			 <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="15" />
 			
+			<!--<uses-permission android:name="android.permission.INTERNET"/>-->
+			    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+			    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+			    
+			
+			  <!-- Only this application can receive the messages and registration result -->
+    <permission android:name="jp.dividiual.capture.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="jp.dividiual.capture.permission.C2D_MESSAGE" />
+    <!-- This app has permission to register and receive message -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    
+			
 				<application android:debuggable="true"
 				android:name="jp.dividual.capture.CaptureAndroidApplication"/>
 			    <!--See the Adobe AIR documentation for more information about setting Google Android permissions-->
@@ -270,6 +282,30 @@
 					ACCESS_WIFI_STATE 権限を同時に切り替える必要があります-->
 			    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 			    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+			    
+			    
+			     
+
+
+    <!-- The following lines have to placed inside the <application> tag-->
+        <receiver android:name="jp.dividiual.capture.func.C2DMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+
+            <!-- Receive the actual message -->
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="jp.dividiual.capture" />
+            </intent-filter>
+
+            <!-- Receive the registration id -->
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="jp.dividiual.capture" />
+            </intent-filter>
+        </receiver>
+
+       
+        
 			</manifest>
 			
 		]]></manifestAdditions>
@@ -283,6 +319,8 @@
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
-    
-
+    <extensions>
+        <extensionID>ru.inspirit.capture</extensionID>
+    <extensionID>jp.dividual.capture</extensionID>
+    </extensions>
 </application>

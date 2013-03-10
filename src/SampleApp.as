@@ -3,6 +3,7 @@ package {
 	import flash.events.*;
 	import flash.geom.*;
 	import flash.desktop.*;
+	import flash.sensors.*;
 	import flash.utils.setTimeout;
 
 	import fl.controls.*;
@@ -21,6 +22,7 @@ package {
 		private var bd:BitmapData;
 		private var bmp:Bitmap;
 		private var cameraLaunched:Boolean = false;
+		private var orientationDetector:DeviceOrientationDetector
 
 		private var nativeNotification:NativeNotification;
 
@@ -56,6 +58,11 @@ package {
 =======
 			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE, _onInvoke );
 			NativeApplication.nativeApplication.addEventListener( Event.DEACTIVATE, _onDeactivateHandler );
+
+			//stage.addEventListener( Event.ENTER_FRAME, function(){ trace( stage.deviceOrientation ) });
+
+			orientationDetector = new DeviceOrientationDetector();
+			orientationDetector.addEventListener( StageOrientationEvent.ORIENTATION_CHANGE, _onDeviceOrientationChange );
 		}
 
 		// 起動時
@@ -76,8 +83,17 @@ package {
 >>>>>>> develop
 		}
 
+		// 本体の向きが変わった時
+		private function _onDeviceOrientationChange( e:StageOrientationEvent ):void{
+			trace( "_onDeviceOrientationChange", e.afterOrientation )
+		}
+
+
 		// カメラを取得しキャプチャを開始
 		public function startCapture():void{
+			trace( ">>>>", CaptureDevice.names )
+			trace( ">>>>", CaptureDevice.names )
+			trace( ">>>>", CaptureDevice.names )
 			if( capture==null ){
 				var names:Array = CaptureDevice.names;
 				if( names.length==0 ){
@@ -116,9 +132,12 @@ package {
 			if( bmp ){
 				bmp.visible = false;
 			}
-			design.diaphragmAnime_mc.gotoAndPlay( "close" )
+			
 			if( onAppExit==false ){
 				cameraLaunched = false;
+				design.diaphragmAnime_mc.gotoAndPlay( "close" )
+			} else {
+				design.diaphragmAnime_mc.gotoAndStop( "open" )
 			}
 		}
 
@@ -129,7 +148,7 @@ package {
 			if( bmp ){
 				bmp.visible = true;
 			}
-			//_updateUI()
+			_updateUI()
 		}
 
 
@@ -213,7 +232,23 @@ package {
 		// フォーカスと露出を合わせて撮影、フルサイズの画像を端末のカメラロールに保存し、withSound が true ならシャッター音を鳴らす
 		// シャッター音は消せない可能性あり。要相談
 		private function shutter( withSound:Boolean=true ):void{
-			capture.shutter("Blink", CaptureDevice.ROTATION_90, withSound);
+			var rot:int;
+			switch( orientationDetector.deviceOrientation ){
+				case StageOrientation.DEFAULT:
+					rot = CaptureDevice.ROTATION_0;
+					break;
+				case StageOrientation.ROTATED_RIGHT:
+					rot = CaptureDevice.ROTATION_90;
+					break;
+				case StageOrientation.UPSIDE_DOWN:
+					rot = CaptureDevice.ROTATION_180;
+					break;
+				case StageOrientation.ROTATED_LEFT:
+					rot = CaptureDevice.ROTATION_270;
+					break;
+			}
+			trace( "shutter", orientationDetector.deviceOrientation, rot )
+			capture.shutter("Blink", rot, withSound);
 		}
 
 

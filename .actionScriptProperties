@@ -34,12 +34,7 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/automation_agent.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
-<<<<<<< HEAD
-      <libraryPathEntry kind="3" linkType="1" path="/CaptureInterface/bin/CaptureInterface.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="1" linkType="1" path="swc"/>
-=======
       <libraryPathEntry kind="3" linkType="1" path="swc/view.swc" useDefaultLinkType="false"/>
->>>>>>> 762b18e2bf673771a2d229e14d28810c39333551
       <libraryPathEntry kind="5" linkType="2" path="capture.ane"/>
     </libraryPath>
     <sourceAttachmentPath/>
@@ -54,14 +49,9 @@
   <buildCSSFiles/>
   <flashCatalyst validateFlashCatalystCompatibility="false"/>
   <buildTargets>
-<<<<<<< HEAD
-    <buildTarget buildTargetName="device" iosSettingsVersion="2" isCurrent="true" platformId="com.adobe.flexide.multiplatform.ios.platform" provisioningFile="/Users/yohki/Projects/Blink/SampleApp/cert/develop.mobileprovision" releasePackageType="">
-      <airSettings airCertificatePath="/Users/yohki/Projects/Blink/SampleApp/cert/develop.p12" airTimestamp="true" anePathSet="true" version="1">
-=======
     <buildTarget buildTargetName="device" iosSettingsVersion="2" isCurrent="true" platformId="com.adobe.flexide.multiplatform.ios.platform" provisioningFile="cert/dd_develop.mobileprovision" releasePackageType="ipa-ad-hoc">
       <multiPlatformSettings enabled="true" hideAneLibSymbols="0" includePlatformLibs="false" platformID="com.adobe.flexide.multiplatform.ios.platform" reducedSizePackaging="false" version="1"/>
       <airSettings airCertificatePath="cert/dd_develop.p12" airTimestamp="true" anePathSet="true" version="1">
->>>>>>> 762b18e2bf673771a2d229e14d28810c39333551
         <airExcludes/>
         <anePaths>
           <anePathEntry path="capture.ane"/>

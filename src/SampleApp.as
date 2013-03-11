@@ -40,6 +40,10 @@ package {
 			design.flashOff_btn.visible = false;
 			design.flashAuto_btn.visible = false;
 			design.stopCamera_btn.visible = false;
+			design.shutter_btn.visible = false;
+			design.af_btn.visible = false;
+			design.changeCamera_btn.visible = false;
+
 
 			design.exposure_mc.visible = false;
 			design.exposure_mc.p2_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
@@ -82,9 +86,6 @@ package {
 
 		// カメラを取得しキャプチャを開始
 		public function startCapture():void{
-			trace( ">>>>", CaptureDevice.names )
-			trace( ">>>>", CaptureDevice.names )
-			trace( ">>>>", CaptureDevice.names )
 			if( capture==null ){
 				var names:Array = CaptureDevice.names;
 				if( names.length==0 ){
@@ -110,7 +111,6 @@ package {
 			addEventListener( Event.ENTER_FRAME, renderFrame )
 			cameraLaunched = true;
 			design.startCamera_btn.visible = false;
-			design.stopCamera_btn.visible = true;
 		}
 
 		// キャプチャを終了
@@ -134,6 +134,14 @@ package {
 			}
 			design.startCamera_btn.visible = true;
 			design.stopCamera_btn.visible = false;
+			design.shutter_btn.visible = false;
+			design.af_btn.visible = false;
+			design.changeCamera_btn.visible = false;
+			design.exposure_mc.visible = false;
+			design.flashOn_btn.visible = false;
+			design.flashOff_btn.visible = false;
+			design.flashAuto_btn.visible = false;
+
 		}
 
 
@@ -148,6 +156,11 @@ package {
 
 
 		private function _updateUI():void{
+			design.stopCamera_btn.visible = true;
+			design.shutter_btn.visible = true;
+			design.af_btn.visible = true;
+			design.changeCamera_btn.visible = true;
+
 			// LED フラッシュのサポート具合によって UI の表示を更新
 			var isFlashSupported:Boolean = capture.isFlashSupported;
 			design.flashOn_btn.visible = isFlashSupported;

@@ -54,8 +54,6 @@ package {
 			design.exposure_mc.m1_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
 			design.exposure_mc.m2_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
 
-<<<<<<< HEAD
-=======
 			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE, _onInvoke );
 			NativeApplication.nativeApplication.addEventListener( Event.DEACTIVATE, _onDeactivateHandler );
 
@@ -80,7 +78,6 @@ package {
 			if( cameraLaunched ){
 				stopCapture( true );
 			}
->>>>>>> develop
 		}
 
 		// 本体の向きが変わった時

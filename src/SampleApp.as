@@ -39,6 +39,7 @@ package {
 			design.flashOn_btn.visible = false;
 			design.flashOff_btn.visible = false;
 			design.flashAuto_btn.visible = false;
+			design.stopCamera_btn.visible = false;
 
 			design.exposure_mc.visible = false;
 			design.exposure_mc.p2_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
@@ -108,6 +109,8 @@ package {
 			capture.startCapturing()
 			addEventListener( Event.ENTER_FRAME, renderFrame )
 			cameraLaunched = true;
+			design.startCamera_btn.visible = false;
+			design.stopCamera_btn.visible = true;
 		}
 
 		// キャプチャを終了
@@ -129,6 +132,8 @@ package {
 			} else {
 				design.diaphragmAnime_mc.gotoAndStop( "open" )
 			}
+			design.startCamera_btn.visible = true;
+			design.stopCamera_btn.visible = false;
 		}
 
 

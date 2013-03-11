@@ -9,10 +9,6 @@ package {
 	import fl.controls.*;
 	
 	import jp.dividual.capture.*;
-<<<<<<< HEAD
-	import jp.dividual.notification.NativeNotification;
-=======
->>>>>>> 762b18e2bf673771a2d229e14d28810c39333551
 	
 	[SWF(width="640", height="920", frameRate="60", backgroundColor="#FFFFFF")] 
 	public class SampleApp extends Sprite {

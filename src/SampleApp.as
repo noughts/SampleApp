@@ -158,7 +158,7 @@ package {
 		private function _updateUI():void{
 			design.stopCamera_btn.visible = true;
 			design.shutter_btn.visible = true;
-			design.af_btn.visible = true;
+			//design.af_btn.visible = true;
 			design.changeCamera_btn.visible = true;
 
 			// LED フラッシュのサポート具合によって UI の表示を更新

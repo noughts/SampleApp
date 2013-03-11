@@ -81,9 +81,9 @@ package {
 
 		// カメラを取得しキャプチャを開始
 		public function startCapture():void{
-			//trace( ">>>>", CaptureDevice.names )
-			//trace( ">>>>", CaptureDevice.names )
-			//trace( ">>>>", CaptureDevice.names )
+			trace( ">>>>", CaptureDevice.names )
+			trace( ">>>>", CaptureDevice.names )
+			trace( ">>>>", CaptureDevice.names )
 			if( capture==null ){
 				var names:Array = CaptureDevice.names;
 				if( names.length==0 ){
@@ -185,6 +185,7 @@ package {
 		private function _onImageSaved( e:CaptureDeviceEvent ):void{
 			trace("EVENT: Image has been saved.");
 			//capture.putExifLocation( e.data, 12.345, 23.456 );
+			design.shutter_btn.visible = true;
 		}
 
 		// ANE から新しいフレーム画像を取得し、画面に表示
@@ -222,6 +223,7 @@ package {
 		// フォーカスと露出を合わせて撮影、フルサイズの画像を端末のカメラロールに保存し、withSound が true ならシャッター音を鳴らす
 		// シャッター音は消せない可能性あり。要相談
 		private function shutter( withSound:Boolean=true ):void{
+			design.shutter_btn.visible = false;
 			var rot:int;
 			switch( orientationDetector.deviceOrientation ){
 				case StageOrientation.DEFAULT:

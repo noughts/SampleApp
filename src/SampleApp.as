@@ -257,16 +257,16 @@ package {
 			var rot:int;
 			switch( orientationDetector.deviceOrientation ){
 				case StageOrientation.DEFAULT:
-					rot = CaptureDevice.ROTATION_0;
-					break;
-				case StageOrientation.ROTATED_RIGHT:
 					rot = CaptureDevice.ROTATION_90;
 					break;
-				case StageOrientation.UPSIDE_DOWN:
+				case StageOrientation.ROTATED_RIGHT:
 					rot = CaptureDevice.ROTATION_180;
 					break;
-				case StageOrientation.ROTATED_LEFT:
+				case StageOrientation.UPSIDE_DOWN:
 					rot = CaptureDevice.ROTATION_270;
+					break;
+				case StageOrientation.ROTATED_LEFT:
+					rot = CaptureDevice.ROTATION_0;
 					break;
 			}
 			trace( "shutter", orientationDetector.deviceOrientation, rot )

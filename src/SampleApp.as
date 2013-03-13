@@ -53,6 +53,7 @@ package {
 			design.exposure_mc.m2_btn.addEventListener( MouseEvent.CLICK, _onExposureClick );
 
 			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE, _onInvoke );
+			NativeApplication.nativeApplication.addEventListener( Event.ACTIVATE, _onActivateHandler );
 			NativeApplication.nativeApplication.addEventListener( Event.DEACTIVATE, _onDeactivateHandler );
 
 			//stage.addEventListener( Event.ENTER_FRAME, function(){ trace( stage.deviceOrientation ) });
@@ -69,6 +70,16 @@ package {
 				startCapture();
 			}
 		}
+
+		// アクティブ時
+		private function _onActivateHandler( e:Event ):void{
+			trace( e );
+			trace( "cameraLaunched", cameraLaunched )
+			if( cameraLaunched ){
+				startCapture();
+			}
+		}
+
 
 		// 終了時
 		private function _onDeactivateHandler( e:Event ):void{
@@ -200,13 +211,7 @@ package {
 
 
 
-		private function _onImageSaved( e:CaptureDeviceEvent ):void{
-			trace("EVENT: Image has been saved.");
-			//capture.putExifLocation( e.data, 12.345, 23.456 );
-			setTimeout( function():void{
-				design.shutter_btn.visible = true;
-			}, 500 )
-		}
+
 
 		// ANE から新しいフレーム画像を取得し、画面に表示
 		private function renderFrame(evt:Event):void{
@@ -243,6 +248,10 @@ package {
 		// フォーカスと露出を合わせて撮影、フルサイズの画像を端末のカメラロールに保存し、withSound が true ならシャッター音を鳴らす
 		// シャッター音は消せない可能性あり。要相談
 		private function shutter( withSound:Boolean=true ):void{
+			if( capture.isFocusing ){
+				return;
+			}
+			stage.mouseChildren = false;
 			design.shutter_btn.visible = false;
 			var rot:int;
 			switch( orientationDetector.deviceOrientation ){
@@ -263,6 +272,15 @@ package {
 			capture.shutter("Blink", rot, withSound);
 		}
 
+
+		private function _onImageSaved( e:CaptureDeviceEvent ):void{
+			trace("EVENT: Image has been saved.");
+			stage.mouseChildren = true;
+			capture.putExifLocation( e.data, 12.345, 23.456 );
+			setTimeout( function():void{
+				design.shutter_btn.visible = true;
+			}, 500 )
+		}
 
 		private function onPreviewClick(e:MouseEvent):void{
 			//trace( "_onPreviewClick", e )

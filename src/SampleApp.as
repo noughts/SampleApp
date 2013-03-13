@@ -157,7 +157,7 @@ package {
 
 
 		private function _onPreviewReady( e:CaptureDeviceEvent ):void{
-			trace("EVENT: Preview ready", capture.bmp.rect);
+			trace( "EVENT: Preview ready", capture.current_bd.rect );
 			design.diaphragmAnime_mc.gotoAndPlay( "open" )
 			if( bmp ){
 				bmp.visible = true;
@@ -220,10 +220,10 @@ package {
 				isNewFrame = capture.requestFrame();
 				if (isNewFrame) {
 					if (!bd) {
-						bd = new BitmapData( capture.bmp.width, capture.bmp.height )
+						bd = new BitmapData( capture.current_bd.width, capture.current_bd.height )
 						bmp = new Bitmap( bd )
 						bmp.rotation = 90;
-						bmp.x = capture.bmp.rect.height;
+						bmp.x = capture.current_bd.rect.height;
 
 						// クリックしたポイントの座標をステージに配置したサイズと合わせるため、
 						// finderContainer_mc 内に finder_mc を作成し、そこに bmp を addChild したあとスケール
@@ -240,7 +240,7 @@ package {
 						finder_mc.width = 640;
 						finder_mc.height = 640 * _aspectRatio;
 					}
-					bd.copyPixels( capture.bmp, capture.bmp.rect, new Point(0,0));
+					bd.copyPixels( capture.current_bd, capture.current_bd.rect, new Point(0,0));
 				}
 			}
 		}
@@ -249,6 +249,7 @@ package {
 		// シャッター音は消せない可能性あり。要相談
 		private function shutter( withSound:Boolean=true ):void{
 			if( capture.isFocusing ){
+				trace( "SampleApp.shutter フォーカス中は動作しません" )
 				return;
 			}
 			stage.mouseChildren = false;

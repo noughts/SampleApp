@@ -203,7 +203,9 @@ package {
 		private function _onImageSaved( e:CaptureDeviceEvent ):void{
 			trace("EVENT: Image has been saved.");
 			//capture.putExifLocation( e.data, 12.345, 23.456 );
-			design.shutter_btn.visible = true;
+			setTimeout( function():void{
+				design.shutter_btn.visible = true;
+			}, 500 )
 		}
 
 		// ANE から新しいフレーム画像を取得し、画面に表示

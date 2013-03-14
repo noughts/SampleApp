@@ -99,6 +99,7 @@ package {
 		public function startCapture():void{
 			if( capture==null ){
 				var names:Array = CaptureDevice.names;
+				trace( "camera names", names )
 				if( names.length==0 ){
 					trace( "カメラが見つかりません" )
 					return
@@ -170,7 +171,9 @@ package {
 			design.stopCamera_btn.visible = true;
 			design.shutter_btn.visible = true;
 			//design.af_btn.visible = true;
-			design.changeCamera_btn.visible = true;
+			if( CaptureDevice.names.length > 1 ){
+				design.changeCamera_btn.visible = true;
+			}
 
 			// LED フラッシュのサポート具合によって UI の表示を更新
 			var isFlashSupported:Boolean = capture.isFlashSupported;
@@ -270,7 +273,7 @@ package {
 					break;
 			}
 			trace( "shutter", orientationDetector.deviceOrientation, rot )
-			capture.shutter("Blink", rot, withSound);
+			capture.shutter("Blink", rot, withSound, 35.6656, 139.7585 );
 		}
 
 

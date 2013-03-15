@@ -20,6 +20,9 @@ package {
 		private var cameraLaunched:Boolean = false;
 		private var orientationDetector:DeviceOrientationDetector
 
+		private var _lat:Number = 99999
+		private var _lng:Number = 99999
+
 		public function SampleApp(){
 			addChild( design )
 
@@ -60,7 +63,19 @@ package {
 
 			orientationDetector = new DeviceOrientationDetector();
 			orientationDetector.addEventListener( StageOrientationEvent.ORIENTATION_CHANGE, _onDeviceOrientationChange );
+
+			if (Geolocation.isSupported) {
+				trace( "Geolocation is supported" );
+				var geo:Geolocation = new Geolocation(); 
+				geo.addEventListener( GeolocationEvent.UPDATE, geoUpdateHandler ); 
+			}
 		}
+
+		public function geoUpdateHandler(event:GeolocationEvent):void{ 
+			trace( event )
+		   _lat = event.latitude
+		   _lng = event.longitude
+		} 
 
 		// 起動時
 		private function _onInvoke( e:InvokeEvent ):void{
@@ -272,15 +287,15 @@ package {
 					rot = CaptureDevice.ROTATION_0;
 					break;
 			}
-			trace( "shutter", orientationDetector.deviceOrientation, rot )
-			capture.shutter("Blink", rot, withSound, 35.6656, 139.7585 );
+			trace( "shutter", orientationDetector.deviceOrientation, rot, _lat, _lng )
+			capture.shutter("Blink", rot, withSound, _lat, _lng );
 		}
 
 
 		private function _onImageSaved( e:CaptureDeviceEvent ):void{
 			trace("EVENT: Image has been saved.");
 			stage.mouseChildren = true;
-			capture.putExifLocation( e.data, 12.345, 23.456 );
+			capture.putExifLocation( e.data, _lat, _lng );
 			setTimeout( function():void{
 				design.shutter_btn.visible = true;
 			}, 500 )

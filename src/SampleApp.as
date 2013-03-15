@@ -72,7 +72,7 @@ package {
 		}
 
 		public function geoUpdateHandler(event:GeolocationEvent):void{ 
-			trace( event )
+			//trace( event )
 		   _lat = event.latitude
 		   _lng = event.longitude
 		} 
